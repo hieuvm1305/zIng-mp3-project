@@ -76,10 +76,3 @@ export const getArtistListSong = (id, page, count) => {
   })
 }
 
-
-export const kickZo = (name) => {
-  if(name === "Zố"){
-    console.log("Cúc");
-    
-  }
-}

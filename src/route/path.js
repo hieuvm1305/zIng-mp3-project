@@ -4,7 +4,8 @@ const path = {
     LOGIN: '/login',
     MY_MUSIC: '/mymusic',
     ALBUM__TITLE__PID: '/album/:title/:pid',
-    PLAYLIST__TITLE__PID: '/playlist/:title/:pid'
+    PLAYLIST__TITLE__PID: '/playlist/:title/:pid',
+    TOP100 : "/top100"
 }
 
 export default path
