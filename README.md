@@ -15,6 +15,13 @@ axios
 
 In the project directory, you can run:
 
+Các chức năng chính của app:
++getHome: 
++player chơi bài hát, dừng bài hát 
++lấy playlist bài hát
++getinfocasi
++gettop100
+
 ### `yarn start`
 
 Runs the app in the development mode.\

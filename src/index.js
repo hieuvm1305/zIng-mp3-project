@@ -8,7 +8,7 @@ import store from "./app/store"
 import { persistor } from "./app/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { BrowserRouter } from "react-router-dom";
-
+import "./assets/swiper.scss"
 const container = document.getElementById("root");
 const root = createRoot(container);
 

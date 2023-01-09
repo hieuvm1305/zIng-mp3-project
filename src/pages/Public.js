@@ -7,16 +7,16 @@ import SidebarRight from "../components/SidebarRight";
 
 function Public() {
   return (
-    <div className="w-full relative h-screen flex flex-row bg-main-300">
+    <div className="w-full relative min-h-screen max-w-screen h-full flex flex-row bg-main-300">
       <div className="w-full h-full flex flex-auto">
-        <div className="w-[240px] h-full flex-none border border-blue-500">
+        <div className="w-[240px] h-full flex-none border border-blue-500 fixed">
           <SideBarLeft />
         </div>
-        <div className="flex flex-col flex-auto border border-red-500">
-          <div className="h-[70px] w-full px-10 flex items-center mb-5">
+        <div className="flex flex-col flex-auto h-full border border-red-500 mb-[100px] ml-[240px]">
+          <div className="h-[70px] w-full flex items-center mb-5 sticky top-0 bg-main-300">
             <Header />
           </div>
-          <div>
+          <div className="mt-[70px]">
             <Outlet />
           </div>
         </div>

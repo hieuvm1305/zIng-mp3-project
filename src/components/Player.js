@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getDetailSong, apiGetSong } from "../service";
 import { getCurSongId } from "../redux/musicSlice";
 import { setPlaying, getIsPlay } from "../redux/playSlice";
-// import { toast } from "react-toastify";
+
 import icons from "../assets/icons";
 
 const {
@@ -28,9 +29,8 @@ function Player() {
   const trackRef = useRef();
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setPlaying(false));
     const fetchDetailSong = async () => {
-      if (curSongId) {
+      if (curSongId !== "") {
         const [res1, res2] = await Promise.all([
           getDetailSong(curSongId),
           apiGetSong(curSongId),
@@ -40,6 +40,7 @@ function Player() {
         }
         if (res2.data.err === 0) {
           setAudio(new Audio(res2.data.data["128"]));
+          audio.load(); // fix bug audio can't change
         } else {
           dispatch(setPlaying(false));
           setAudio(new Audio());
@@ -48,18 +49,19 @@ function Player() {
       }
     };
     fetchDetailSong();
-  }, [curSongId, dispatch]);
+  }, [curSongId]);
 
-  const funcPlay = useCallback(async () => {
+  const funcPlay = async () => {
     await audio.play();
-  }, [audio]);
+  };
 
   useEffect(() => {
-    audio.load();
     if (isPlaying) {
       funcPlay();
+    } else {
+      audio.pause();
     }
-  }, [audio, funcPlay, isPlaying]);
+  }, [audio]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -87,7 +89,7 @@ function Player() {
   return (
     <div className="bg-main-400 px-5 h-full flex">
       <div className="w-[30%] flex-auto flex gap-3 items-center">
-        <img src={songInfo?.thumbnail} alt="" />
+        <img src={songInfo?.thumbnail} alt="" className="h-full" />
         <div className="flex flex-col">
           <span className="text-xs text-gray-500">
             {songInfo?.artistsNames}
@@ -143,7 +145,9 @@ function Player() {
           </div>
         </div>
       </div>
-      <div className="w-[30%] flex-auto border rounded-lg ">Volume</div>
+      <div className="w-[30%] flex-auto border rounded-lg ">
+
+      </div>
     </div>
   );
 }
