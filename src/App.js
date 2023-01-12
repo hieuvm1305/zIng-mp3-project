@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Mvideo from "./pages/Mvideo";
 import Personal from "./pages/Personal";
 import NewReleaseMusic from "./pages/NewReleaseMusic";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ function App() {
             <Route path={path.MV} element={<Mvideo />}/>
             <Route path={path.PERSONAL} element={<Personal />}/>
             <Route path={path.NEWRELEASE} element={<NewReleaseMusic />}/>
+            <Route path={path.Search} element={<SearchPage />} />
             <Route path="*" element={<div>404  Error</div>} />
           </Route>
         </Routes>

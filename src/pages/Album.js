@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import moment from "moment";
 import { Skeleton, Stack } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setPlayList } from "../redux/playListSlice";
 import ListSong from "../components/ListSong";
-import { Scrollbars } from "react-custom-scrollbars-2";
 import { getDetailPlaylist } from "../service";
 
 function Album() {
   const { pid } = useParams();
+  const dispatch = useDispatch();
   const [playlistData, setPlaylistData] = useState();
   const [isloading, setisloading] = useState(true);
   useEffect(() => {
@@ -16,15 +18,16 @@ function Album() {
       if (response?.data.err === 0) {
         setisloading(false);
         setPlaylistData(response.data?.data);
+        dispatch(setPlayList(response.data?.data?.song.items))
       }
     };
     fetchDetailPlayList();
     return () => {};
-  }, [pid]);
+  }, [dispatch, pid]);
 
   return (
-    <div className="flex gap-5 w-full h-full px-[60px]">
-      <div className="flex-none w-1/4 border flex flex-col items-center gap-2 rounded-md">
+    <div className="flex gap-5 w-full px-[60px]">
+      <div className="flex-none w-1/4 border flex flex-col items-start gap-2 rounded-md mb-2">
         {isloading ? (
           <div className="w-full">
             <Stack spacing={2}>
@@ -51,14 +54,14 @@ function Album() {
             </Stack>
           </div>
         ) : (
-          <div>
+          <div className="">
             <img
               src={playlistData?.thumbnailM}
               alt="thumbnail"
-              className="w-full object-contain rounded-md shadow-md"
+              className="img-playlist w-full object-contain rounded-md shadow-md cursor-pointer"
             />
-            <div className="flex flex-col items gap-1">
-              <h3 className="text-[20px]  font-bold text-gray-800">
+            <div className="flex flex-col items gap-1 px-2 mt-2">
+              <h3 className="text-[20px] font-bold text-gray-800">
                 {playlistData?.title}
               </h3>
               <span>

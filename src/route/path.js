@@ -8,7 +8,8 @@ const path = {
     FOLLOW: "/follow",
     NEWRELEASE: "/newrelease",
     MV: "/mv",
-    PERSONAL: "/personal"
+    PERSONAL: "/personal",
+    Search: "/search",
 }
 
 export default path

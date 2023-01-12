@@ -13,12 +13,14 @@ import {
 import musicSlice from "../redux/musicSlice";
 import homeSlice from "../redux/homeSlice";
 import playSlice from "../redux/playSlice";
+import playListSlice from "../redux/playListSlice";
 import storage from "redux-persist/lib/storage";
 
 const rootReducer = combineReducers({
   music: musicSlice,
   home: homeSlice,
   play: playSlice,
+  album: playListSlice,
 });
 const persistedReducer = persistReducer(
   {

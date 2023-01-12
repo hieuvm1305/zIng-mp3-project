@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import useDebounce from "../hook/useDebounce";
-import { searchSong } from "../service";
 import { FiSearch } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 function Search() {
+  const navigate = useNavigate();
   const [searchTitle, setSearchTitle] = useState("");
   const debouncedValue = useDebounce(searchTitle, 1000);
 
-  const handleSearch = async () => {
-    if (debouncedValue) {
-      try {
-        const response = await searchSong(debouncedValue);
-        if (response) {
-          console.log(response);
-        }
-      } catch (error) {}
+  const handleSearch = () => {
+    if(debouncedValue){
+      navigate(`/search?query=${debouncedValue}`)
     }
   };
   const handleKeyDown = (e) => {

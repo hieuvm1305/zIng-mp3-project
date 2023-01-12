@@ -18,7 +18,7 @@ function List({ songData }) {
       }}
     >
       <div className="flex items-center gap-2 flex-1">
-        <div className="flex flex-row items-center gap-1 w-1/3">
+        <div className="flex flex-row items-center gap-3 w-1/3">
           <span>
             <BsMusicNoteBeamed />
           </span>

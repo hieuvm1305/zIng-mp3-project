@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { setCurSongId } from "../redux/musicSlice";
 import { setPlaying } from "../redux/playSlice";
+import { setPlayList } from "../redux/playListSlice";
 import { getNewReleaseChart } from "../service";
 import { FiPlay } from "react-icons/fi";
 import moment from "moment";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 function NewReleaseMusic() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [newReleaseList, setNewReleaseList] = useState([]);
   useEffect(() => {
@@ -13,14 +16,14 @@ function NewReleaseMusic() {
       try {
         const res = await getNewReleaseChart();
         if (res) {
-          console.log(res.data.data.items);
           setNewReleaseList(res.data.data.items);
-        }
+          dispatch(setPlayList(res.data.data.items));
+        } 
       } catch (error) {}
     };
     getListNewRealease();
     return () => {};
-  }, [newReleaseList]);
+  },);
 
   const handlePlay = (id) => {
     dispatch(setCurSongId(id));
@@ -50,7 +53,7 @@ function NewReleaseMusic() {
               <p className="text-lg text-zinc-900">{item.title}</p>
               <p className="text-xs text-zinc-400">{item.artistsNames}</p>
             </div>
-            <p className="text-xs text-zinc-400">{item.album?.title}</p>
+            <div onClick={()=>{navigate(`/album/${item.album?.title}/${item.album?.encodeId}`)}} className="cursor-pointer"><p className="text-xs text-zinc-400">{item.album?.title}</p></div>
             <p>{moment.utc(item.duration * 1000).format("mm:ss")}</p>
           </div>
         ))}

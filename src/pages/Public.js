@@ -23,7 +23,7 @@ function Public() {
         <div className="w-[329px] hidden 1600:flex flex-none border animate-slide-left">
           <SidebarRight />
         </div>
-        <div className="fixed bottom-0 left-0 right-0 h-[70px]">
+        <div className="fixed bottom-0 left-0 right-0 h-[86px]">
           <Player />
         </div>
       </div>

@@ -1,16 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useRef, useCallback } from "react";
+
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getDetailSong, apiGetSong } from "../service";
-import { getCurSongId } from "../redux/musicSlice";
-import { setPlaying, getIsPlay } from "../redux/playSlice";
-
+import { getCurSongId, setCurSongId } from "../redux/musicSlice";
+import {
+  setPlaying,
+  getIsPlay,
+  getCurrentTime,
+  setCurrentTime,
+} from "../redux/playSlice";
+import { getPlayList } from "../redux/playListSlice";
+import { Slider } from "@mui/material";
+import { getTimeSong } from "../hook/fn";
 import icons from "../assets/icons";
 
 const {
   AiOutlineHeart,
-  AiFillHeart,
   BsThreeDots,
   MdSkipNext,
   MdSkipPrevious,
@@ -18,16 +24,24 @@ const {
   BsPauseFill,
   BsFillPlayFill,
   CiShuffle,
+  RiVolumeMuteFill,
+  RiVolumeUpFill,
+  MdOndemandVideo,
+  TbMicrophone2,
 } = icons;
-let intervalId;
+
 function Player() {
+  const dispatch = useDispatch();
   const curSongId = useSelector(getCurSongId);
   const isPlaying = useSelector(getIsPlay);
-  const [audio, setAudio] = useState(new Audio());
+  const playList = useSelector(getPlayList);
+  const curTime = useSelector(getCurrentTime);
+  const [audioSrc, setAudioSrc] = useState();
   const [songInfo, setSongInfo] = useState(null);
-  const thumbRef = useRef();
-  const trackRef = useRef();
-  const dispatch = useDispatch();
+  const [isMuted, setIsMuted] = useState(false);
+  const [volumeValue, setVolumeValue] = useState(100);
+  // get song
+  const audioRef = useRef(new Audio());
   useEffect(() => {
     const fetchDetailSong = async () => {
       if (curSongId !== "") {
@@ -39,11 +53,11 @@ function Player() {
           setSongInfo(res1.data.data);
         }
         if (res2.data.err === 0) {
-          setAudio(new Audio(res2.data.data["128"]));
-          audio.load(); // fix bug audio can't change
+          setAudioSrc(res2.data.data["128"]);
+          audioRef.current.load(); // fix bug audio can't change
         } else {
           dispatch(setPlaying(false));
-          setAudio(new Audio());
+          setAudioSrc("");
           // toast.info(res2.data.msg);
         }
       }
@@ -51,45 +65,126 @@ function Player() {
     fetchDetailSong();
   }, [curSongId]);
 
+  // play function,
   const funcPlay = async () => {
-    await audio.play();
+    await audioRef.current.play();
   };
-
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && audioSrc) {
       funcPlay();
     } else {
-      audio.pause();
+      audioRef.current.pause();
     }
-  }, [audio]);
+  }, [audioSrc, isPlaying]);
 
-  useEffect(() => {
-    if (isPlaying) {
-      // const thumbEl = document.getElementById("thumb-progress");
-      intervalId = setInterval(() => {
-        let percent =
-          Math.round((audio.currentTime * 10000) / songInfo?.duration) / 100;
-        thumbRef.current.style.cssText = `right: ${100 - percent}%`;
-      }, 200);
-    } else {
-      intervalId && clearInterval(intervalId);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying]);
+  // process bar using slider of Material UI
+  // useEffect(() => {
+  //   if (isPlaying) {
+  //     intervalId = setInterval(() => {
+  //       setaudioDuration(audioRef.current.currentTime);
+  //     }, 150);
+  //   } else {
+  //     intervalId && clearInterval(intervalId);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isPlaying]);
 
+  // handle play or pause button
   const handleTogglePlayMusic = () => {
     if (isPlaying) {
-      audio.pause();
+      audioRef.current.pause();
       dispatch(setPlaying(false));
     } else {
       funcPlay();
       dispatch(setPlaying(true));
     }
   };
+
+  // change duration time of song
+  const handleChangeDuration = (e) => {
+    audioRef.current.currentTime = e.target.value;
+    dispatch(setCurrentTime(e.target.value));
+  };
+
+  // process bar update time
+  useEffect(() => {
+    const handeValueInputAudio = () => {
+      dispatch(setCurrentTime(audioRef.current.currentTime));
+    };
+    if (!!audioSrc && audioRef.current) {
+      audioRef.current.addEventListener("timeupdate", handeValueInputAudio);
+    }
+  }, [dispatch, audioSrc]);
+
+  // change mute or unmute
+  const handleVolumeChange = () => {
+    if (isMuted) {
+      setIsMuted(false);
+      audioRef.current.muted = false;
+      setVolumeValue(100);
+    } else {
+      setIsMuted(true);
+      audioRef.current.muted = true;
+      setVolumeValue(0);
+    }
+  };
+  // change volume amount
+  const handleVolumeAmount = (e) => {
+    setVolumeValue(e.target.value);
+    audioRef.current.volume = (parseInt(e.target.value) / 100).toFixed(1);
+  };
+
+  // handle playlist and next, prev button
+  const handleNextSong = () => {
+    let indexOfSong = playList?.findIndex(
+      (item) => item.encodeId === curSongId
+    );
+    if (playList.length > 0) {
+      if (indexOfSong >= playList.length - 1) {
+        dispatch(setCurSongId(playList[0].encodeId));
+        dispatch(setPlaying(true));
+      } else {
+        dispatch(setCurSongId(playList[indexOfSong + 1].encodeId));
+        dispatch(setPlaying(true));
+      }
+    } else {
+      alert("Please select playlist!");
+    }
+  };
+
+  const handlePrevSong = () => {
+    let indexOfSong = playList?.findIndex(
+      (item) => item.encodeId === curSongId
+    ); // find index of Song
+    // check position and handle prev Song
+    if (playList.length > 0) {
+      if (indexOfSong === 0) {
+        dispatch(setCurSongId(playList[playList.length - 1].encodeId));
+        dispatch(setPlaying(true));
+      } else {
+        dispatch(setCurSongId(playList[indexOfSong - 1].encodeId));
+        dispatch(setPlaying(true));
+      }
+    } else {
+      alert("Please select playlist!");
+    }
+  };
+
+  // Handle playlist song when click playlist image
+  const handlePlayListSong = () => {
+    console.log(1)
+    if (playList.length > 0) {
+      dispatch(setCurSongId(playList[0].encodeId));
+      dispatch(setPlaying(true));
+    }
+  };
+
   return (
     <div className="bg-main-400 px-5 h-full flex">
       <div className="w-[30%] flex-auto flex gap-3 items-center">
-        <img src={songInfo?.thumbnail} alt="" className="h-full" />
+        <div className="cursor-pointer" onClick={() => handlePlayListSong()}>
+          <img src={songInfo?.thumbnail} alt="" className="h-full rounded-md" />
+        </div>
         <div className="flex flex-col">
           <span className="text-xs text-gray-500">
             {songInfo?.artistsNames}
@@ -107,46 +202,79 @@ function Player() {
           </span>
         </div>
       </div>
-      <div className="w-[40%] flex-auto border flex items-center justify-center gap-4 flex-col border-[#8E2C9C] rounded-3xl py-2">
+      <div className="w-[40%] flex-auto border flex items-center justify-center gap-1 flex-col border-[#8E2C9C] rounded-3xl py-1">
         <div className="flex gap-8 justify-center items-center">
           <span className="cursor-pointer" title="Bật phát ngẫu nhiên">
             <CiShuffle size={24} />
           </span>
-          <span className="cursor-pointer">
+          <span className="cursor-pointer" onClick={() => handlePrevSong()}>
             <MdSkipPrevious size={24} />
           </span>
           <span
             className="p-1 border border-gray-700 cursor-pointer hover:text-main-500 rounded-full"
-            onClick={handleTogglePlayMusic}
+            onClick={() => handleTogglePlayMusic()}
           >
             {isPlaying ? (
-              <BsPauseFill size={30} />
+              <BsPauseFill size={24} />
             ) : (
-              <BsFillPlayFill size={30} />
+              <BsFillPlayFill size={24} />
             )}
           </span>
-          <span className="cursor-pointer">
+          <span className="cursor-pointer" onClick={() => handleNextSong()}>
             <MdSkipNext size={24} />
           </span>
           <span className="cursor-pointer" title="Bật phát lại tất cả">
             <CiRepeat size={24} />
           </span>
         </div>
-        <div className="w-full">
-          <div
-            ref={trackRef}
-            className="bg-[rgba(0,0,0,0.1)] relative m-auto h-[3px] w-4/5 rounded-l-full rounded-r-full"
-          >
-            <div
-              ref={thumbRef}
-              id="thumb-progress"
-              className="bg-[#0e8080] absolute top-0 left-0 h-[3px] rounded-l-full rounded-r-full"
-            ></div>
+        <div className="hidden">
+          <audio ref={audioRef} src={audioSrc}></audio>
+        </div>
+        <div className="w-[90%] flex flex-row gap-4">
+          <span className="text-sm">
+            {getTimeSong(audioRef.current.currentTime)}
+          </span>
+          <div className="w-4/5">
+            <Slider
+              size="small"
+              min={0}
+              max={songInfo ? songInfo.duration : 100}
+              value={curTime}
+              aria-label="Small"
+              valueLabelDisplay="off"
+              onChange={(e) => handleChangeDuration(e)}
+            />
           </div>
+          <span className="text-sm">{getTimeSong(songInfo?.duration)}</span>
         </div>
       </div>
-      <div className="w-[30%] flex-auto border rounded-lg ">
 
+      <div className="w-[30%] flex border rounded-lg flex-row items-center justify-center gap-5 px-2 ">
+        <div>
+          <MdOndemandVideo size={24} />
+        </div>
+        <div>
+          <TbMicrophone2 size={24} />
+        </div>
+        <div className="flex flex-row gap-3">
+          <div className="cursor-pointer" onClick={handleVolumeChange}>
+            {isMuted ? (
+              <RiVolumeMuteFill size={24} />
+            ) : (
+              <RiVolumeUpFill size={24} />
+            )}
+          </div>
+          <div className="w-[120px]">
+            <Slider
+              aria-label="Volume"
+              size="small"
+              min={0}
+              max={100}
+              value={volumeValue}
+              onChange={(e) => handleVolumeAmount(e)}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

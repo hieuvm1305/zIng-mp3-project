@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const client = axios.create({
-  baseURL: "https://api-zingmp3-vercel.vercel.app/api",
+  baseURL: process.env.REACT_APP_LOCAL_API,
   timeout: 10000,
   headers: {},
 });
