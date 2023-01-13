@@ -5,7 +5,7 @@
 
 .swiper-button-prev,
 .swiper-button-next {
-  color: #222222;
+  color: #ede4e4;
   border: 1px solid rgb(0 0 0 / 0.3);
   border-radius: 50%;
   width: 32px;
@@ -21,4 +21,12 @@
     font-weight: 700;
   }
 }
+.item-song:hover{
+  .bg-img{
+    .bg-play{
+      display: block;
+    }
+  }
+}
+
 

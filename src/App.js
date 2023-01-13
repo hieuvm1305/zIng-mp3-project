@@ -14,7 +14,8 @@ import Mvideo from "./pages/Mvideo";
 import Personal from "./pages/Personal";
 import NewReleaseMusic from "./pages/NewReleaseMusic";
 import SearchPage from "./pages/SearchPage";
-
+import Artist from "./pages/artist/Artist";
+import ArtistSong from "./pages/artist/ArtistSong";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -35,8 +36,10 @@ function App() {
             <Route path={path.PERSONAL} element={<Personal />}/>
             <Route path={path.NEWRELEASE} element={<NewReleaseMusic />}/>
             <Route path={path.Search} element={<SearchPage />} />
-            <Route path="*" element={<div>404  Error</div>} />
+            <Route path={path.ARTIST} element={<Artist />} />
+            <Route path={path.ARTISTSONG} element={<ArtistSong />}/>
           </Route>
+          <Route path="*" element={<div>404  Error</div>} />
         </Routes>
       </div>
       <ToastContainer

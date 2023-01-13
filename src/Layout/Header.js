@@ -6,8 +6,9 @@ import { AiOutlineUpload, AiOutlineSetting } from "react-icons/ai";
 import { BsPersonCircle } from "react-icons/bs";
 
 function Header() {
+
   return (
-    <div className="flex flex-row justify-between w-full items-center border-b border-b-zinc-400 py-3 px-10 shadow-lg">
+    <div className="flex flex-row justify-between w-full items-center py-3 px-10">
       <div className="flex gap-3 items-center">
         <div className="flex gap-3 text-gray-400">
           <span>

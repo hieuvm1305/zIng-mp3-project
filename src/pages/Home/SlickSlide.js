@@ -17,8 +17,7 @@ function SlickSlide() {
       dispatch(setCurSongId(item.encodeId));
       dispatch(setPlaying(true));
     } else if (item?.type === 4) {
-      // const albumPath = item?.link?.split(".")[0];
-      navigate(`/album/:title/${item.encodeId}`);
+      navigate(`/album/${item.aliasTitle}/${item.encodeId}`);
     }
   };
 

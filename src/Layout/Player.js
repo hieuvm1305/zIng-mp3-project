@@ -54,7 +54,7 @@ function Player() {
         }
         if (res2.data.err === 0) {
           setAudioSrc(res2.data.data["128"]);
-          audioRef.current.load(); // fix bug audio can't change
+          audioRef?.current.load(); // fix bug audio can't change
         } else {
           dispatch(setPlaying(false));
           setAudioSrc("");
@@ -76,18 +76,6 @@ function Player() {
       audioRef.current.pause();
     }
   }, [audioSrc, isPlaying]);
-
-  // process bar using slider of Material UI
-  // useEffect(() => {
-  //   if (isPlaying) {
-  //     intervalId = setInterval(() => {
-  //       setaudioDuration(audioRef.current.currentTime);
-  //     }, 150);
-  //   } else {
-  //     intervalId && clearInterval(intervalId);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isPlaying]);
 
   // handle play or pause button
   const handleTogglePlayMusic = () => {
@@ -180,10 +168,10 @@ function Player() {
   };
 
   return (
-    <div className="bg-main-400 px-5 h-full flex">
+    <div className="bg-main-400 px-5 h-full flex py-2">
       <div className="w-[30%] flex-auto flex gap-3 items-center">
-        <div className="cursor-pointer" onClick={() => handlePlayListSong()}>
-          <img src={songInfo?.thumbnail} alt="" className="h-full rounded-md" />
+        <div className="cursor-pointer h-full p-2" onClick={() => handlePlayListSong()}>
+          <img src={songInfo?.thumbnail} alt="" className="w-[60px] h-[60px] rounded-md" />
         </div>
         <div className="flex flex-col">
           <span className="text-xs text-gray-500">
@@ -202,7 +190,7 @@ function Player() {
           </span>
         </div>
       </div>
-      <div className="w-[40%] flex-auto border flex items-center justify-center gap-1 flex-col border-[#8E2C9C] rounded-3xl py-1">
+      <div className="w-[40%] flex-auto flex items-center justify-center gap-1 flex-col">
         <div className="flex gap-8 justify-center items-center">
           <span className="cursor-pointer" title="Bật phát ngẫu nhiên">
             <CiShuffle size={24} />
@@ -249,7 +237,7 @@ function Player() {
         </div>
       </div>
 
-      <div className="w-[30%] flex border rounded-lg flex-row items-center justify-center gap-5 px-2 ">
+      <div className="w-[30%] flex flex-row items-center justify-center gap-5 px-2 ">
         <div>
           <MdOndemandVideo size={24} />
         </div>

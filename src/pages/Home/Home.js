@@ -3,7 +3,7 @@ import SlickSlide from "./SlickSlide";
 
 const Home = () => {
   return (
-    <div className="">
+    <div className="mt-[70px]">
       <div className="w-fit mx-auto">
         <SlickSlide />
       </div>

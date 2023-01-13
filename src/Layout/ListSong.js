@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import List from "./List";
+import List from "../components/List";
 import icons from "../assets/icons";
 import moment from "moment";
 import Scrollbars from "react-custom-scrollbars-2";

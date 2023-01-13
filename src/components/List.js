@@ -4,11 +4,14 @@ import moment from "moment/moment";
 import { useDispatch } from "react-redux";
 import { setCurSongId } from "../redux/musicSlice";
 import { setPlaying } from "../redux/playSlice";
-
+import { useNavigate } from "react-router-dom";
+import ArtistName from "./ArtistName";
 const { BsMusicNoteBeamed } = icons;
 
 function List({ songData }) {
   const dispatch = useDispatch();
+  // eslint-disable-next-line no-unused-vars
+  const navigate = useNavigate();
   return (
     <div
       className="flex justify-between items-center p-[10px] border-t border-[rgba(0,0,0,0.05)] hover:bg-[#e4dde3] cursor-pointer"
@@ -33,7 +36,7 @@ function List({ songData }) {
                 ? `${songData?.title?.slice(0, 30)}...`
                 : songData?.title}
             </span>
-            <span>{songData?.artistsNames}</span>
+            <ArtistName artists={songData?.artists}/>
           </span>
         </div>
         <span className="w-1/3 text-center">{songData?.album?.title}</span>
