@@ -4,7 +4,6 @@ import { getArtist } from "../../service";
 import { BsPlayFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import icons from "../../assets/icons";
-import ArtistName from "../../components/ArtistName";
 import OutstandingSong from "../../components/OutstandingSong";
 import Single from "./single/Single";
 import SingerAlbum from "./album/SingerAlbum";
@@ -14,7 +13,7 @@ import Appear from "./appear/Appear";
 import ArtistHint from "./maybelike/ArtistHint";
 
 const { MdOutlineNavigateNext } = icons;
-function Artist() {
+function ArtistNew() {
   const { alias } = useParams();
   const navigate = useNavigate();
   const [artistInfo, setArtistInfo] = useState();
@@ -48,7 +47,7 @@ function Artist() {
               alt="cover"
               className="w-full h-full"
             ></img>
-            <div className="absolute bottom-3 left-15">
+            <div className="absolute bottom-3 left-5">
               <div className="flex flex-col gap-5">
                 <div className="flex flex-row items-center justify-start gap-4">
                   <h2 className="text-5xl font-semibold text-white font-sans">
@@ -71,29 +70,7 @@ function Artist() {
           </div>
           <div className="px-15">
             <div className="w-full flex flex-row justify-between gap-7 my-8">
-              <div className="w-1/3">
-                <p className="font-bold text-2xl mb-3">Mới Phát Hành</p>
-                <div className="flex flex-row items-center gap-4 rounded-lg px-2 bg-[rgba(206,217,217,0.8)] h-[183px]">
-                  <div className="w-2/5">
-                    <img
-                      src={artistInfo?.topAlbum?.thumbnail}
-                      alt="thumbnail"
-                      className="w-full h-full rounded-lg"
-                    />
-                  </div>
-                  <div className="flex flex-col w-3/5 gap-2 justify-center">
-                    <p className="text-sm">{artistInfo?.topAlbum.textType}</p>
-                    <p className="text-base font-bold">
-                      {artistInfo?.topAlbum.title}
-                    </p>
-                    <ArtistName artists={artistInfo?.topAlbum.artists} />
-                    <p className="text-sm">
-                      {artistInfo?.topAlbum.releaseDate}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="w-2/3">
+              <div className="w-full">
                 <div className=" w-full flex justify-between  mb-3">
                   <p className="font-bold text-xl">Bài hát nổi bật</p>
                   <div
@@ -155,9 +132,7 @@ function Artist() {
                   </div>
                   <div className="mt-5">
                     <div className="flex flex-col gap-3">
-                      <span className="font-bold text-lg">
-                        {artistInfo.follow}
-                      </span>
+                      <span className="font-bold text-lg">{artistInfo.follow}</span>
                       <span>Người theo dõi</span>
                     </div>
                   </div>
@@ -173,4 +148,4 @@ function Artist() {
   );
 }
 
-export default Artist;
+export default ArtistNew;

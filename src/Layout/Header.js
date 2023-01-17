@@ -1,14 +1,15 @@
 import React from "react";
 import { HiArrowNarrowLeft, HiArrowNarrowRight } from "react-icons/hi";
-import Search from "./Search";
+import Search from "../pages/search/Search";
 import { RiVipFill } from "react-icons/ri";
 import { AiOutlineUpload, AiOutlineSetting } from "react-icons/ai";
 import { BsPersonCircle } from "react-icons/bs";
 
+
 function Header() {
 
   return (
-    <div className="flex flex-row justify-between w-full items-center py-3 px-10">
+    <div className="flex flex-auto w-full justify-between items-center py-3 px-15">
       <div className="flex gap-3 items-center">
         <div className="flex gap-3 text-gray-400">
           <span>

@@ -1,5 +1,5 @@
 import React, {useState } from "react";
-import useDebounce from "../hook/useDebounce";
+import useDebounce from "../../hook/useDebounce";
 import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 

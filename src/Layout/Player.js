@@ -9,6 +9,12 @@ import {
   getIsPlay,
   getCurrentTime,
   setCurrentTime,
+  getRepeatAllStatus,
+  getRepeatOneStatus,
+  getRandomStatus,
+  setRepeatAll,
+  setRandom,
+  setRepeatOne
 } from "../redux/playSlice";
 import { getPlayList } from "../redux/playListSlice";
 import { Slider } from "@mui/material";
@@ -36,6 +42,9 @@ function Player() {
   const isPlaying = useSelector(getIsPlay);
   const playList = useSelector(getPlayList);
   const curTime = useSelector(getCurrentTime);
+  const isRepeatOne = useSelector(getRepeatOneStatus);
+  const isRepeatAll = useSelector(getRepeatAllStatus);
+  const isRandom = useSelector(getRandomStatus);
   const [audioSrc, setAudioSrc] = useState();
   const [songInfo, setSongInfo] = useState(null);
   const [isMuted, setIsMuted] = useState(false);
@@ -166,6 +175,35 @@ function Player() {
       dispatch(setPlaying(true));
     }
   };
+
+  //handle auto play
+  useEffect(() => {
+
+    const handleNextSong = () => {
+      let indexOfSong = playList?.findIndex(
+        (item) => item.encodeId === curSongId
+      );
+      if (playList.length > 0) {
+        if (indexOfSong >= playList.length - 1) {
+          dispatch(setCurSongId(playList[0].encodeId));
+          dispatch(setPlaying(true));
+        } else {
+          dispatch(setCurSongId(playList[indexOfSong + 1].encodeId));
+          dispatch(setPlaying(true));
+        }
+      } else {
+        alert("Please select playlist!");
+      }
+    };
+  
+    if (audioRef.current && playList.length > 0 && isRepeatAll) {
+      audioRef.current.addEventListener("ended", handleNextSong);
+  }
+    return () => {
+     
+    }
+  }, [dispatch, ])
+  
 
   return (
     <div className="bg-main-400 px-5 h-full flex py-2">

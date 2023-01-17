@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { setCurSongId } from "../redux/musicSlice";
 import { setPlaying } from "../redux/playSlice";
 import ArtistName from "./ArtistName";
-function OutstandingSong({ playlist }) {
+function OutstandingSong({ data }) {
   const dispatch = useDispatch();
-  const outStanding = playlist?.slice(0, 1)[0]?.items?.slice(0, 6);
+  const outStanding = data?.slice(0, 1)[0]?.items?.slice(0, 6);
   const handlePlay = (id) => {
     dispatch(setCurSongId(id));
     dispatch(setPlaying(true));

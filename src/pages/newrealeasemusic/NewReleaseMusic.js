@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { setCurSongId } from "../redux/musicSlice";
-import { setPlaying } from "../redux/playSlice";
-import { setPlayList } from "../redux/playListSlice";
-import { getNewReleaseChart } from "../service";
+import { setCurSongId } from "../../redux/musicSlice";
+import { setPlaying } from "../../redux/playSlice";
+import { setPlayList } from "../../redux/playListSlice";
+import { getNewReleaseChart } from "../../service";
 import { FiPlay } from "react-icons/fi";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import ArtistName from "../components/ArtistName";
+import ArtistName from "../../components/ArtistName";
 function NewReleaseMusic() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ function NewReleaseMusic() {
     dispatch(setPlaying(true));
   };
   return (
-    <div className="mt-[70px] mx-4">
+    <div className="mt-[70px] px-15">
       <div className="h-16 flex flex-row items-center">
         <h2 className="font-bold text-4xl text-[#0f7070]">Nhạc mới</h2>
         <div className="mx-2">
@@ -70,23 +70,11 @@ function NewReleaseMusic() {
             </div>
             <div className="flex flex-col w-[30%]">
               <p className="text-lg text-[#0f7070]">{item.title}</p>
-              {/* <div className="flex flex-row gap-2 justify-start">
-                {item.artists?.map((item) => (
-                  <p
-                    className="text-xs cursor-pointer text-[#0f7070] hover:border-b-[#0f7070] hover:border-b-[0.5px]"
-                    onClick={() => {
-                      navigate(`/artist/${item.alias}`);
-                    }}
-                  >
-                    {item.name}
-                  </p>
-                ))}
-              </div> */}
               <ArtistName artists={item?.artists}/>
             </div>
             <div
               onClick={() => {
-                navigate(`/album/${item.album?.title}/${item.album?.encodeId}`);
+                navigate(`${item.album?.link}`);
               }}
               className="flex flex-auto cursor-pointer w-[30%]"
             >

@@ -3,46 +3,63 @@ import { useParams } from "react-router-dom";
 import moment from "moment";
 import { Skeleton, Stack } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setPlayList } from "../redux/playListSlice";
-import { getIsPlay } from "../redux/playSlice";
-import ListSong from "../Layout/ListSong";
+import { setPlayList, getPlayList } from "../redux/playListSlice";
+import { getIsPlay, setPlaying, setRepeatAll } from "../redux/playSlice";
+import { setCurSongId } from "../redux/musicSlice";
+import ListSong from "./ListSong";
 import { getDetailPlaylist } from "../service";
 
 function Album() {
   const { pid } = useParams();
+  const pcodeId = pid?.slice(0, -5); // do link co chua .html nen cat bo luon .html de get pid
   const dispatch = useDispatch();
   const isPlaying = useSelector(getIsPlay);
   const imageAlbum = useRef();
   const [playlistData, setPlaylistData] = useState();
   const [isloading, setisloading] = useState(true);
+  const playList = useSelector(getPlayList);
   useEffect(() => {
     const fetchDetailPlayList = async () => {
-      const response = await getDetailPlaylist(pid);
+      const response = await getDetailPlaylist(pcodeId);
       if (response?.data.err === 0) {
         setisloading(false);
         setPlaylistData(response.data?.data);
-        dispatch(setPlayList(response.data?.data?.song.items))
+        dispatch(setPlayList(response.data?.data?.song.items));
       }
     };
     fetchDetailPlayList();
     return () => {};
-  }, [dispatch, pid]);
-  
-  // useEffect(() => {
-  //   if(isPlaying && !isloading){
-  //     imageAlbum?.current.classList?.add("rounded-[50%]");
-  //   } else{
-  //     imageAlbum?.current.classList?.remove("rounded-[50%]");
-  //   }
-  //   return () => {
-  //   }
-  // }, [isPlaying, isloading])
-  
+  }, [dispatch, pcodeId, pid]);
+
+  const changeStyle = () => {
+    if (isPlaying && !isloading) {
+      imageAlbum?.current.classList?.remove("rounded-md");
+      imageAlbum?.current.classList?.add("rounded-[50%]", "animate-rotatespin");
+    } else {
+      imageAlbum?.current.classList?.remove("animate-rotatespin", "rounded-[50%]");
+    }
+  };
+
+ 
+  const handlePlayAlbum = () => {
+    dispatch(setCurSongId(playList[0]?.encodeId));
+    dispatch(setPlaying(true));
+    dispatch(setRepeatAll(true));
+  };
+
+  useEffect(() => {
+    changeStyle();
+    return () => {
+    
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying, isloading]);
+
   return (
     <div className="flex gap-5 w-full h-full px-[60px] mt-[90px]">
       <div className="flex-none w-1/4 border flex flex-col items-start gap-2 rounded-md mb-2">
         {isloading ? (
-          <div className="w-full">
+          <div className="w-full" ref={imageAlbum}>
             <Stack spacing={2}>
               <Skeleton animation="wave" variant="rounded" height={250} />
               <Skeleton
@@ -68,12 +85,15 @@ function Album() {
           </div>
         ) : (
           <div className="">
+            <div onClick={() => handlePlayAlbum()}>
             <img
               src={playlistData?.thumbnailM}
               alt="thumbnail"
               className="img-playlist w-full object-contain rounded-md shadow-md cursor-pointer"
               ref={imageAlbum}
+              
             />
+            </div>
             <div className="flex flex-col items gap-1 px-2 mt-2">
               <h3 className="text-[20px] font-bold text-gray-800">
                 {playlistData?.title}

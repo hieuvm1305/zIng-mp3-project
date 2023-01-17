@@ -23,16 +23,16 @@ function Public() {
   }, []);
   
   return (
-    <div className="w-full relative min-h-screen max-w-screen h-full flex flex-row">
+    <div className="w-full relative min-h-screen h-full">
       <div className="w-full h-full flex flex-auto">
-        <div className="w-[240px] h-full flex-none border border-blue-500 fixed">
+        <div className="w-[240px] h-full flex-none border border-blue-500 bg-white fixed">
           <SideBarLeft />
         </div>
-        <div className="flex flex-col flex-auto h-full border border-red-500  ml-[240px] bg-[#e0ebeb]">
-          <div className="h-[70px] w-full flex items-center mb-5 fixed top-0 z-40" ref={navBarRef}>
+        <div className="flex flex-col flex-auto min-h-screen h-full border border-red-500  ml-[240px] bg-[#e0ebeb] mb-[90px]">
+          <div className="h-[70px] right-0 left-[240px] mb-5 fixed top-0 z-40" ref={navBarRef}>
             <Header />
           </div>
-          <div className="">
+          <div className="h-full">
             <Outlet />
           </div>
         </div>

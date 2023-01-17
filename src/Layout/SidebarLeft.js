@@ -30,7 +30,7 @@ const sidebarMenu = [
     icons: <MdOutlineFeed size={24} />,
   },
   {
-    path: "/newrelease",
+    path: "/moi-phat-hanh",
     text: "Nhạc Mới",
     icons: <HiOutlineMusicNote size={24}/>
   },
@@ -55,7 +55,7 @@ function SideBarLeft() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex h-full flex-col bg-main-200">
+    <div className="flex h-full flex-col bg-main-100">
       <div onClick={() => navigate(path.HOME)} className="px-[25px] mt-3">
         <img src={logo} alt="logo" className="w-[120px] h-10" />
       </div>
