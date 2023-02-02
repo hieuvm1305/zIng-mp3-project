@@ -11,7 +11,7 @@ import Personal from "../pages/Personal";
 import ArtistSingleList from "../pages/artist/single/ArtistSingleList";
 import ArtistSongList from "../pages/artist/song/ArtistSongList";
 import PlayList from "../Layout/PlayList";
-import Follow from "../pages/Follow";
+import Follow from "../pages/follow/Follow";
 import AllAlbum from "../pages/artist/album/AllAlbum";
 import Login from "../pages/Login";
 import Mvideo from "../pages/mv/Mvideo";

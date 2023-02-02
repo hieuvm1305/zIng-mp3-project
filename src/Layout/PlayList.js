@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import moment from "moment";
 import { Skeleton, Stack } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurSongId } from "../redux/musicSlice";
+import { getCurSongId, setCurSongId } from "../redux/musicSlice";
 import { setPlayList, getPlayList } from "../redux/playListSlice";
 import { getIsPlay, setPlaying, setRepeatAll } from "../redux/playSlice";
 import ListSong from "./ListSong";
@@ -32,17 +32,24 @@ function PlayList() {
     fetchDetailPlayList();
     return () => {};
   }, [dispatch, pcodeId, pid]);
+  
+  // handle play playlist 
+  const handlePlayList = () => {
+    dispatch(setCurSongId(playList[0]?.encodeId));
+    dispatch(setPlaying(true));
+    dispatch(setRepeatAll(true));
+  }
 
   // kiem tra bai hat co thuoc play list hay khong
-  useEffect(() => { 
-    setCheckPlayList(playList?.includes((item) => item.encodeId === currentSongId))
-    return () => {
-    }
-  }, [playList, currentSongId])
-  
-  //
   useEffect(() => {
+    setCheckPlayList(
+      playList?.includes((item) => item.encodeId === currentSongId)
+    );
+    return () => {};
+  }, [playList, currentSongId]);
 
+  // style change
+  useEffect(() => {
     if (isPlaying && !isloading && checkPlayList) {
       imageAlbum?.current.classList?.remove("rounded-md");
       imageAlbum?.current.classList?.add("rounded-[50%]", "animate-rotatespin");
@@ -53,8 +60,8 @@ function PlayList() {
       );
     }
     return () => {};
-  }, [currentSongId, isPlaying, isloading, playList]);
-
+  }, [checkPlayList, currentSongId, isPlaying, isloading]);
+  
   return (
     <div className="flex gap-5 w-full h-full px-[60px] mt-[90px]">
       <div className="flex-none w-1/4 border flex flex-col items-start gap-2 rounded-md mb-2">
@@ -85,12 +92,14 @@ function PlayList() {
           </div>
         ) : (
           <div className="">
-            <img
-              src={playlistData?.thumbnailM}
-              alt="thumbnail"
-              className="img-playlist w-full object-contain rounded-md shadow-md cursor-pointer"
-              ref={imageAlbum}
-            />
+            <div className="" onClick={() => handlePlayList()}>
+              <img
+                src={playlistData?.thumbnailM}
+                alt="thumbnail"
+                className="img-playlist w-full object-contain rounded-md shadow-md cursor-pointer"
+                ref={imageAlbum}
+              />
+            </div>
             <div className="flex flex-col items gap-1 px-2 mt-2">
               <h3 className="text-[20px] font-bold text-gray-800">
                 {playlistData?.title}

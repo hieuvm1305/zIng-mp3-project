@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import { getTop100 } from '../../service'
 
 function Top100() {
   return (

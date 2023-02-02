@@ -14,7 +14,7 @@ import {
   getRandomStatus,
   setRepeatAll,
   setRandom,
-  setRepeatOne
+  setRepeatOne,
 } from "../redux/playSlice";
 import { getPlayList } from "../redux/playListSlice";
 import { Slider } from "@mui/material";
@@ -169,16 +169,15 @@ function Player() {
 
   // Handle playlist song when click playlist image
   const handlePlayListSong = () => {
-    console.log(1)
+    console.log(1);
     if (playList.length > 0) {
       dispatch(setCurSongId(playList[0].encodeId));
       dispatch(setPlaying(true));
     }
   };
 
-  //handle auto play
+  //handle auto play next
   useEffect(() => {
-
     const handleNextSong = () => {
       let indexOfSong = playList?.findIndex(
         (item) => item.encodeId === curSongId
@@ -195,21 +194,26 @@ function Player() {
         alert("Please select playlist!");
       }
     };
-  
+
     if (audioRef.current && playList.length > 0 && isRepeatAll) {
       audioRef.current.addEventListener("ended", handleNextSong);
-  }
-    return () => {
-     
     }
-  }, [dispatch, ])
-  
+    return () => {};
+  }, [dispatch, playList, isRepeatAll]);
 
+  // các chức năng như random, repeat one xử lý sau
   return (
     <div className="bg-main-400 px-5 h-full flex py-2">
       <div className="w-[30%] flex-auto flex gap-3 items-center">
-        <div className="cursor-pointer h-full p-2" onClick={() => handlePlayListSong()}>
-          <img src={songInfo?.thumbnail} alt="" className="w-[60px] h-[60px] rounded-md" />
+        <div
+          className="cursor-pointer h-full p-2"
+          onClick={() => handlePlayListSong()}
+        >
+          <img
+            src={songInfo?.thumbnail}
+            alt=""
+            className="w-[60px] h-[60px] rounded-md"
+          />
         </div>
         <div className="flex flex-col">
           <span className="text-xs text-gray-500">
@@ -254,7 +258,7 @@ function Player() {
           </span>
         </div>
         <div className="hidden">
-          <audio ref={audioRef} src={audioSrc}></audio>
+          <audio ref={audioRef} src={audioSrc} loop={isRepeatOne}></audio>
         </div>
         <div className="w-[90%] flex flex-row gap-4">
           <span className="text-sm">

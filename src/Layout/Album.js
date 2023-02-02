@@ -4,6 +4,7 @@ import moment from "moment";
 import { Skeleton, Stack } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setPlayList, getPlayList } from "../redux/playListSlice";
+import { getCurSongId } from "../redux/musicSlice";
 import { getIsPlay, setPlaying, setRepeatAll } from "../redux/playSlice";
 import { setCurSongId } from "../redux/musicSlice";
 import ListSong from "./ListSong";
@@ -18,6 +19,8 @@ function Album() {
   const [playlistData, setPlaylistData] = useState();
   const [isloading, setisloading] = useState(true);
   const playList = useSelector(getPlayList);
+  const currentSongId = useSelector(getCurSongId);
+  const [checkPlayList, setCheckPlayList] = useState(false);
   useEffect(() => {
     const fetchDetailPlayList = async () => {
       const response = await getDetailPlaylist(pcodeId);
@@ -25,33 +28,45 @@ function Album() {
         setisloading(false);
         setPlaylistData(response.data?.data);
         dispatch(setPlayList(response.data?.data?.song.items));
+        dispatch(setRepeatAll(true));
       }
     };
     fetchDetailPlayList();
     return () => {};
   }, [dispatch, pcodeId, pid]);
+  // kiem tra bai hat co thuoc play list hay khong
+  useEffect(() => {
+    let index = playList?.findIndex(
+      (item) => item.encodeId.toString() === currentSongId.toString()
+    );
+    if (index !== -1) {
+      setCheckPlayList(true);
+    } else setCheckPlayList(false);
+    return () => {};
+  }, [playList, currentSongId]);
 
-  const changeStyle = () => {
-    if (isPlaying && !isloading) {
-      imageAlbum?.current.classList?.remove("rounded-md");
-      imageAlbum?.current.classList?.add("rounded-[50%]", "animate-rotatespin");
-    } else {
-      imageAlbum?.current.classList?.remove("animate-rotatespin", "rounded-[50%]");
-    }
-  };
-
- 
   const handlePlayAlbum = () => {
     dispatch(setCurSongId(playList[0]?.encodeId));
     dispatch(setPlaying(true));
-    dispatch(setRepeatAll(true));
   };
 
   useEffect(() => {
-    changeStyle();
-    return () => {
-    
+    const changeStyle = () => {
+      if (isPlaying && !isloading && checkPlayList) {
+        imageAlbum?.current.classList?.remove("rounded-md");
+        imageAlbum?.current.classList?.add(
+          "rounded-[50%]",
+          "animate-rotatespin"
+        );
+      } else {
+        imageAlbum?.current.classList?.remove(
+          "animate-rotatespin",
+          "rounded-[50%]"
+        );
+      }
     };
+    changeStyle();
+    return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying, isloading]);
 
@@ -86,13 +101,12 @@ function Album() {
         ) : (
           <div className="">
             <div onClick={() => handlePlayAlbum()}>
-            <img
-              src={playlistData?.thumbnailM}
-              alt="thumbnail"
-              className="img-playlist w-full object-contain rounded-md shadow-md cursor-pointer"
-              ref={imageAlbum}
-              
-            />
+              <img
+                src={playlistData?.thumbnailM}
+                alt="thumbnail"
+                className="img-playlist w-full object-contain rounded-md shadow-md cursor-pointer"
+                ref={imageAlbum}
+              />
             </div>
             <div className="flex flex-col items gap-1 px-2 mt-2">
               <h3 className="text-[20px] font-bold text-gray-800">
@@ -115,10 +129,15 @@ function Album() {
           </div>
         )}
       </div>
-      <ListSong
-        songs={playlistData?.song?.items}
-        totalDuration={playlistData?.song?.totalDuration}
-      />
+      <div className="w-full">
+        <div className="flex flex-wrap gap-1 w-full">
+          <span>Lời tựa</span><span>{playlistData?.sortDescription}</span>
+        </div>
+        <ListSong
+          songs={playlistData?.song?.items}
+          totalDuration={playlistData?.song?.totalDuration}
+        />
+      </div>
     </div>
   );
 }
